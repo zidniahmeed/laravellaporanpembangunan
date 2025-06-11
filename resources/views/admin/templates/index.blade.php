@@ -1,8 +1,8 @@
 @if (!session('admin'))
-<script>
-    alert('Anda Harus Login');
+    <script>
+        alert('Anda Harus Login');
         location = '{{ url('home/login') }}';
-</script>
+    </script>
 @endif
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -11,7 +11,7 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Pelaporan Kriminal Tindak Kejahatan Masyarakat - {{ session('admin')->level }}</title>
+    <title>Si Kelur - {{ session('admin')->level }}</title>
     <link href="{{ asset('assets/admin/css/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet"
         type="text/css">
     <link
@@ -19,8 +19,11 @@
         rel="stylesheet">
     <link href="{{ asset('assets/admin/css/css/sb-admin-2.min.css') }}" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
-    <link rel="stylesheet"
-        href="{{ asset('assets/admin/assets/DataTables/DataTables-1.10.18/css/dataTables.bootstrap4.min.css') }}">
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
+
     <link href="{{ asset('assets/admin/css/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet"
         type="text/css">
     <script src="{{ asset('assets/admin/assets/ckeditor/ckeditor.js') }}"></script>
@@ -33,6 +36,9 @@
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.4/d3.min.js"></script>
+
+
+
     <style>
         .btn-secondary {
             background-color: #ecb788;
@@ -78,18 +84,60 @@
             /* Teks Putih jika diinginkan */
             border: 1px solid #ecb788 !important;
         }
+
+        .bg-admin {
+            background-color: #007bff;
+        }
+
+        /* Biru */
+        .bg-kelurahan {
+            background-color: #28a745;
+        }
+
+        /* Hijau */
+        .bg-lurah {
+            background-color: #ffc107;
+        }
+
+        /* Kuning */
+        .bg-bappeda {
+            background-color: #dc3545;
+        }
+
+        /* Merah */
+        .bg-pimpinan {
+            background-color: #17a2b8;
+        }
+
+        /* Biru muda */
+        .bg-user {
+            background-color: #6c757d;
+        }
+
+        /* Abu */
     </style>
 
 </head>
 
 <body id="page-top">
+    @php
+        $bgColor = match (session('admin')->level) {
+            'Admin' => 'bg-admin',
+            'Admin Kelurahan' => 'bg-kelurahan',
+            'Lurah' => 'bg-lurah',
+            'Admin Bappeda' => 'bg-bappeda',
+            'Pimpinan' => 'bg-pimpinan',
+            'User' => 'bg-user',
+            default => 'bg-default',
+        };
+    @endphp
 
     <div id="wrapper">
-        <ul class="navbar-nav sidebar sidebar-dark accordion" id="accordionSidebar" style="background-color: #1f2932;">
+        <ul class="navbar-nav sidebar accordion {{ $bgColor }}" id="accordionSidebar">
             <a class="sidebar-brand d-flex align-items-center justify-content-center text-white"
-                style="background-color: #f97300" href="{{ url('admin') }}">
+                href="{{ url('admin') }}">
                 <div class="sidebar-brand-text mx-3" style="font-size: 12px;">
-                    <img src="{{ asset('foto/logos.jpeg') }}" alt="Logo" class="logo" style="width: 50px !important">
+                    <img src="{{ asset('foto/logos.png') }}" alt="Logo" class="logo" style="width: 50px !important">
                 </div>
             </a>
             <hr class="sidebar-divider">
@@ -112,39 +160,117 @@
                     <span>Dashboard</span></a>
             </li>
 
+            {{-- Sidebar Navigation --}}
             @if (session('admin')->level == 'Admin')
-            <hr class="sidebar-divider">
-            <li class="nav-item">
-                <a class="nav-link text-white" href="{{ url('admin/kategori') }}">
-                    <i class="fas fa-list-alt text-white"></i>
-                    <span>Jenis Pengaduan</span></a>
-            </li>
-            <hr class="sidebar-divider">
-            <li class="nav-item">
-                <a class="nav-link text-white" href="{{ url('admin/riwayatpengaduan') }}">
-                    <i class="fas fa-list-alt text-white"></i>
-                    <span>Daftar Pengaduan</span></a>
-            </li>
-            <hr class="sidebar-divider">
-            <li class="nav-item">
-                <a class="nav-link text-white" href="{{ url('admin/pengguna') }}">
-                    <i class="fas fa-user-friends text-white"></i>
-                    <span>Data Member</span></a>
-            </li>
+                {{-- Hanya untuk super Admin --}}
+                <hr class="sidebar-divider">
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{{ url('admin/pengguna/all') }}">
+                        <i class="fas fa-user-friends text-white"></i>
+                        <span>Data Member</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{{ url('kelurahan') }}">
+                        <i class="fas fa-building text-white"></i>
+                        <span>Data Kelurahan</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{{ url('laporan') }}">
+                        <i class="fas fa-file-alt text-white"></i>
+                        <span>Data Laporan</span>
+                    </a>
+                </li>
             @endif
-            @if (session('admin')->level == 'User')
+
+            @if (session('admin')->level == 'Admin Kelurahan')
+                <hr class="sidebar-divider">
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{{ url('laporan/create') }}">
+                        <i class="fas fa-plus text-white"></i>
+                        <span>Tambah Laporan</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{{ url('laporan') }}">
+                        <i class="fas fa-history text-white"></i>
+                        <span>Riwayat Laporan</span>
+                    </a>
+                </li>
+            @endif
+
+            @if (session('admin')->level == 'Lurah')
+                <hr class="sidebar-divider">
+
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{{ url('laporan') }}">
+                        <i class="fas fa-check-circle text-white"></i>
+                        <span>Laporan</span>
+                    </a>
+                </li>
+            @endif
+
+            @if (session('admin')->level == 'Admin Bappeda')
+                <hr class="sidebar-divider">
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{{ url('laporan') }}">
+                        <i class="fas fa-check-circle text-white"></i>
+                        <span> Laporan</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{{ url('admin/pengguna/Admin Kelurahan') }}">
+                        <i class="fas fa-users-cog text-white"></i>
+                        <span>Kelola Admin Kelurahan</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{{ url('admin/pengguna/Lurah') }}">
+                        <i class="fas fa-user-tie text-white"></i>
+                        <span>Kelola Akun Lurah</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{{ url('kelurahan') }}">
+                        <i class="fas fa-map-marker-alt text-white"></i>
+                        <span>Kelola Data Kelurahan</span>
+                    </a>
+                </li>
+            @endif
+
+            @if (session('admin')->level == 'Pimpinan')
+                <hr class="sidebar-divider">
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{{ url('laporan') }}">
+                        <i class="fas fa-file-alt text-white"></i>
+                        <span>Detail Laporan</span>
+                    </a>
+                </li>
+            @endif
+
+            {{-- Menu Logout (Untuk Semua Level) --}}
             <hr class="sidebar-divider">
             <li class="nav-item">
-                <a class="nav-link text-white" href="{{ url('admin/riwayatpengaduan') }}">
-                    <i class="fas fa-history text-white"></i>
-                    <span>Riwayat Pengaduan</span></a>
+                <a class="nav-link text-white" href="{{ url('admin/logout') }}">
+                    <i class="fas fa-sign-out-alt text-white"></i>
+                    <span>Logout</span>
+                </a>
             </li>
+
+            @if (session('admin')->level == 'User')
+                <hr class="sidebar-divider">
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{{ url('admin/riwayatpengaduan') }}">
+                        <i class="fas fa-history text-white"></i>
+                        <span>Riwayat Pengaduan</span></a>
+                </li>
             @endif
         </ul>
 
         <div id="content-wrapper" class="d-flex flex-column">
             <div id="content">
-                <nav class="navbar navbar-expand navbar-light topbar mb-4 static-top shadow bg-danger">
+                <nav class="navbar navbar-expand navbar-light topbar mb-4 static-top shadow {{ $bgColor }}">
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                         <i class="fa fa-bars"></i>
                     </button>
@@ -174,9 +300,9 @@
                 <div class="container-fluid">
                     <div id="page-inner">
                         @if (Session::has('alert'))
-                        <div class="alert alert-primary">
-                            {{ Session::get('alert') }}
-                        </div>
+                            <div class="alert alert-primary">
+                                {{ Session::get('alert') }}
+                            </div>
                         @endif
                         @yield('page-content')
                     </div>
@@ -192,41 +318,23 @@
             <script src="{{ asset('assets/admin/assets/js/bootstrap.bundle.min.js') }}"></script>
             <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-            <script src="{{ asset('assets/admin/assets/DataTables/DataTables-1.10.18/js/jquery.dataTables.min.js') }}">
-            </script>
-            <script
-                src="{{ asset('assets/admin/assets/DataTables/DataTables-1.10.18/js/dataTables.bootstrap4.min.js') }}">
-            </script>
 
-            <script src="{{ asset('assets/admin/assets/DataTables/JSZip-2.5.0/jszip.min.js') }}"></script>
-            <script src="{{ asset('assets/admin/assets/DataTables/pdfmake-0.1.36/pdfmake.min.js') }}"></script>
-            <script src="{{ asset('assets/admin/assets/DataTables/pdfmake-0.1.36/vfs_fonts.js') }}"></script>
-            <script src="{{ asset('assets/admin/assets/DataTables/Buttons-1.5.6/js/buttons.html5.min.js') }}"></script>
-            <script src="{{ asset('assets/admin/assets/DataTables/Buttons-1.5.6/js/buttons.print.min.js') }}"></script>
-            <script src="{{ asset('assets/admin/assets/DataTables/Buttons-1.5.6/js/buttons.colvis.min.js') }}"></script>
+
+
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.4/dist/sweetalert2.all.min.js"></script>
+            <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+            <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
             <script>
-                $(document).ready(function() {
+                $(document).ready(function () {
                     $('.select2').select2({});
 
-                    var table = $('#table').DataTable({
-                        buttons: ['csv', 'print', 'excel', 'pdf'],
-                        dom: "<'row'<'col-md-3'l><'col-md-5'B><'col-md-4'f>>" +
-                            "<'row'<'col-md-12'tr>>" +
-                            "<'row'<'col-md-5'i><'col-md-7'p>>",
-                        lengthMenu: [
-                            [5, 10, 25, 50, 100, -1],
-                            [5, 10, 25, 50, 100, "ALL"]
-                        ]
-                    });
+                    var table = $('#table').DataTable();
 
-                    table.buttons().container()
-                        .appendTo('#table_wrapper .col-md-5:eq(0)');
                 });
             </script>
             <script>
                 // Toggle the sidebar
-                $("#sidebarToggleTop").on('click', function() {
+                $("#sidebarToggleTop").on('click', function () {
                     $("body").toggleClass("sidebar-toggled");
                     $(".sidebar").toggleClass("toggled");
                     if ($(".sidebar").hasClass("toggled")) {
@@ -241,6 +349,16 @@
                         title: "Sukses!",
                         text: "{{ session('success') }}",
                         icon: "success"
+                    });
+                @endif
+            </script>
+
+            <script>
+                @if (session('error'))
+                    Swal.fire({
+                        title: "Error!",
+                        text: "{{ session('error') }}",
+                        icon: "error"
                     });
                 @endif
             </script>

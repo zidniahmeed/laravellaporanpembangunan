@@ -126,12 +126,20 @@ class AdminController extends Controller
 
 
 
-    public function pengguna()
+    public function pengguna($level)
     {
-        $pengguna = DB::table('pengguna')->where('level', 'User')->get();
+        if($level == 'all'){
+            $pengguna = DB::table('pengguna')->get();
+
+        }else{
+            $pengguna = DB::table('pengguna')->where('level', $level)->get();
+
+        }
+
 
         $data = [
             'pengguna' => $pengguna,
+            'level'    => $level
         ];
 
         return view('admin.pengguna', $data);
@@ -141,6 +149,56 @@ class AdminController extends Controller
     {
         DB::table('pengguna')->where('id', $id)->delete();
         return back()->with('success', 'Pengguna Berhasil Dihapus');
+    }
+
+    public function tambahpengguna($level)
+    {
+        return view('admin/tambahpenguna',compact('level'));
+    }
+
+    public function simpanpengguna(Request $request)
+    {
+        // Validasi input
+        $request->validate(
+            [
+                'nama' => 'required|string|max:255',
+                'email' => 'required|email|unique:pengguna,email',
+                'password' => 'required|confirmed',
+                'telepon' => 'required|numeric',
+                'alamat' => 'required|string',
+            ],
+            [
+                'email.unique' => 'Email sudah terdaftar',
+                'password.confirmed' => 'Konfirmasi password tidak sesuai',
+                'password.required' => 'Password harus diisi',
+                'email.required' => 'Email harus diisi',
+                'nama.required' => 'Nama harus diisi',
+                'telepon.required' => 'Telepon harus diisi',
+                'alamat.required' => 'Alamat harus diisi',
+                'telepon.numeric' => 'Telepon harus berupa angka',
+            ]
+        );
+
+        // Ambil data input
+        $nama = $request->input('nama');
+        $email = $request->input('email');
+        $telepon = $request->input('telepon');
+        $alamat = $request->input('alamat');
+        $password = $request->input('password');
+        $level = $request->input('level');
+
+        // Simpan data ke tabel pengguna
+        DB::table('pengguna')->insert([
+            'nama' => $nama,
+            'email' => $email,
+            'password' => $password,
+            'telepon' => $telepon,
+            'alamat' => $alamat,
+            'level' => $level
+        ]);
+
+        // Redirect dengan pesan sukses
+        return redirect('admin/pengguna')->with('success', 'Pendaftaran Berhasil Silahkan Login');
     }
 
     public function logout()

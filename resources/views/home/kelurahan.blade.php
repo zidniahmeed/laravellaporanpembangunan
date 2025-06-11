@@ -75,48 +75,51 @@
     </header>
     <!-- ***** Header Area End ***** -->
 
-    <div class="main-banner">
-        <div class="owl-carousel owl-banner">
-            <div class="item item-1">
-                <div class="header-text mb-5">
+
+
+    <div class="featured section">
+        <div class="container">
+             <div class="row">
+        <div class="col-md-12 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between bg-danger">
+                    <h6 class="m-0 font-weight-bold text-white">Data Kelurahan</h6>
                 </div>
-            </div>
-            <div class="item item-2">
-                <div class="header-text mb-5">
-                </div>
-            </div>
-            <div class="item item-3">
-                <div class="header-text mb-5">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped" id="table">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Nama</th>
+                                        <th>Kecamatan</th>
+                                        <th>Kabupaten</th>
+                                        <th>Provinsi</th>
+                                        <th>No HP</th>
+                                        <th>Detail Kelurahan</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($kelurahan as $item)
+                                        <tr>
+                                            <td>{{ $item->namakelurahan }}</td>
+                                            <td>{{ $item->kecamatan }}</td>
+                                            <td>{{ $item->kabupaten }}</td>
+                                            <td>{{ $item->provinsi }}</td>
+                                            <td>{{ $item->nohpkelurahan }}</td>
+                                            {{-- <td>
+                                                <a href="{{ route('kelurahan.edit', $item->idkelurahan) }}"
+                                                    class="btn btn-sm btn-warning">Detail</a>
+                                            </td> --}}
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="featured section">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-5">
-                    <div class="left-image">
-                        <img src="{{ asset('foto/bg.gif') }}" alt="">
-                        <a href="/"><img src="{{ asset('foto/logos.png') }}" alt=""
-                                style="max-width: 60px; padding: 0px;"></a>
-                    </div>
-                </div>
-                <div class="col-lg-7">
-                    <div class="section-heading">
-                        <h6>| Tentang Website</h6>
-                        <p class="text-justify">
-                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
-                            been the industry's standard dummy text ever since the 1500s, when an unknown printer took a
-                            galley of type and scrambled it to make a type specimen book. It has survived not only five
-                            centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
-                            It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum
-                            passages, and more recently with desktop publishing software like Aldus PageMaker including
-                            versions of Lorem Ipsum.
-                        </p>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 

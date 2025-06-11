@@ -16,7 +16,7 @@
 
     <style>
         body {
-            background-image: url('../../../foto/bg.jpg');
+            background-image: url('foto/bg.gif');
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -98,7 +98,7 @@
 <body>
     <div class="login-form mt-5 mb-5">
         <!-- Logo -->
-        <img src="{{ asset('foto/logos.jpeg') }}" alt="Logo" class="logo">
+        <img src="{{ asset('foto/logos.png') }}" alt="Logo" class="logo">
 
         <!-- Title and Description -->
         <h2>Login</h2>
@@ -116,9 +116,9 @@
                 <input type="password" class="form-control" id="password" name="password" required>
             </div>
             <button type="submit" class="btn btn-login btn-block mt-4">Masuk</button>
-            <a href="/home/daftar" class="register-link">Belum punya akun? <span
+            {{-- <a href="/home/daftar" class="register-link">Belum punya akun? <span
                     style="color: #f97300;">Registrasi</span></a>
-            <a href="/" class="login-link text-dark">Balik ke Beranda</a>
+            <a href="/" class="login-link text-dark">Balik ke Beranda</a> --}}
         </form>
     </div>
 

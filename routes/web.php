@@ -5,6 +5,8 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Home;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\KelurahanController;
+use App\Http\Controllers\LaporanController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -36,8 +38,8 @@ Route::middleware(['authmiddleware'])->controller(AdminController::class)->group
     Route::post('admin/updateprofile/{id}', 'updateprofile');
     Route::get('admin/hapusprofile/{id}', 'hapusprofile');
 
-    Route::get('admin/pengguna', 'pengguna');
-    Route::get('admin/tambahpengguna', 'tambahpengguna');
+    Route::get('admin/pengguna/{role}', 'pengguna');
+    Route::get('admin/tambahpengguna/{role}', 'tambahpengguna');
     Route::post('admin/simpanpengguna', 'simpanpengguna');
     Route::get('admin/ubahpengguna/{id}', 'ubahpengguna');
     Route::post('admin/updatepengguna/{id}', 'updatepengguna');
@@ -45,22 +47,10 @@ Route::middleware(['authmiddleware'])->controller(AdminController::class)->group
 
     Route::get('admin/logout', 'logout');
 
-
-    // Riwayat Pengaduan
-    Route::get('admin/riwayatpengaduan', 'riwayatpengaduan');
-    Route::get('admin/tambahpengaduan', 'tambahpengaduan');
-    Route::post('admin/simpanpengaduan', 'simpanpengaduan');
-    Route::get('admin/ubahpengaduan/{id}', 'ubahpengaduan');
-    Route::post('admin/updatepengaduan/{id}', 'updatepengaduan');
-    Route::get('admin/hapuspengaduan/{id}', 'hapuspengaduan');
-    Route::get('admin/detailpengaduan/{id}', 'detailpengaduan');
-    Route::post('admin/updatestatuspengaduan/{id}', 'updatestatuspengaduan');
-
-    // Kategori
-    Route::get('admin/kategori', 'kategori');
-    Route::get('admin/tambahkategori', 'tambahkategori');
-    Route::post('admin/simpankategori', 'simpankategori');
-    Route::get('admin/ubahkategori/{id}', 'ubahkategori');
-    Route::post('admin/updatekategori/{id}', 'updatekategori');
-    Route::get('admin/hapuskategori/{id}', 'hapuskategori');
 });
+Route::resource('kelurahan', KelurahanController::class)->middleware(['authmiddleware']);
+Route::get('api/kabupaten', [KelurahanController::class, 'getCities'])->name('api.kabupaten');
+Route::resource('laporan', LaporanController::class)->middleware(['authmiddleware']);
+Route::get('home/kelurahan', [KelurahanController::class,'kelurahan']);
+
+

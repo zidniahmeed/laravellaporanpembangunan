@@ -41,7 +41,7 @@ class HomeController extends Controller
             ]
         );
 
-        // Ambil data input 
+        // Ambil data input
         $nama = $request->input('nama');
         $email = $request->input('email');
         $telepon = $request->input('telepon');
@@ -78,13 +78,9 @@ class HomeController extends Controller
             ->first();
 
         if ($akun) {
-            if ($akun->level == "User") {
+
                 session(['admin' => $akun]);
                 return redirect('admin')->with('success', 'Anda sukses login');
-            } elseif ($akun->level == "Admin") {
-                session(['admin' => $akun]);
-                return redirect('admin')->with('success', 'Anda sukses login');
-            }
         } else {
             return redirect()->back()->with('error', 'Email atau Password anda salah');
         }
