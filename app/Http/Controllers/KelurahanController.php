@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kelurahan;
+use App\Models\Laporan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -120,9 +121,107 @@ class KelurahanController extends Controller
         return response()->json($response['rajaongkir']['results'] ?? []);
     }
 
-    public function kelurahan(){
+    public function kelurahan()
+    {
         $kelurahan = Kelurahan::get();
-        return view('home.kelurahan',compact('kelurahan'));
+        return view('home.kelurahan', compact('kelurahan'));
+    }
+
+
+    public function detailkelurahan($kelurahan)
+    {
+$pekerjaanFields = [
+        'petani' => 'Petani',
+        'buruh_tani' => 'Buruh Tani',
+        'pedagang' => 'Pedagang',
+        'nelayan' => 'Nelayan',
+        'pns' => 'PNS',
+        'tni_polri' => 'TNI/POLRI',
+        'buruh' => 'Buruh',
+        'pensiunan' => 'Pensiunan',
+        'wirausaha' => 'Wirausaha',
+        'lainnya' => 'Lainnya',
+    ];
+
+    $pendidikanFields = [
+        'paud' => 'PAUD',
+        'tk' => 'TK',
+        'sd' => 'SD',
+        'smp' => 'SMP',
+        'sma' => 'SMA',
+        'smk' => 'SMK',
+        'diploma' => 'Diploma',
+        'sarjana' => 'Sarjana',
+    ];
+
+    $kesehatanFields = [
+        'posyandu' => 'Posyandu',
+        'puskesmas_pembantu' => 'Puskesmas Pembantu',
+        'puskesmas' => 'Puskesmas',
+        'klinik' => 'Klinik',
+        'jumlah_dokter' => 'Jumlah Dokter',
+        'jumlah_bidan' => 'Jumlah Bidan',
+        'jumlah_perawat' => 'Jumlah Perawat',
+    ];
+
+    $lulusanFields = [
+        'lulusan_sd' => 'Lulusan SD',
+        'lulusan_smp' => 'Lulusan SMP',
+        'lulusan_sma' => 'Lulusan SMA',
+        'lulusan_perguruan_tinggi' => 'Lulusan Perguruan Tinggi',
+    ];
+
+    $lulusanFields2 = [
+        'lulusan_diniyah' => 'Lulusan Diniyah',
+        'lulusan_pesantren' => 'Lulusan Pesantren',
+    ];
+
+    $lulusanFields3 = [
+        'tidak_lulus_sd' => 'Tidak Lulus SD',
+        'tidak_sekolah' => 'Tidak Pernah Sekolah',
+    ];
+
+    $keuanganFields1 = [
+        'dana_desa' => 'Dana Desa',
+        'add' => 'Alokasi Dana Desa (ADD)',
+        'pendapatan_lain' => 'Pendapatan Lain',
+    ];
+
+    $keuanganFields2 = [
+        'bantuan_pemerintah' => 'Bantuan Pemerintah',
+        'bantuan_provinsi' => 'Bantuan Provinsi',
+        'bantuan_kabupaten' => 'Bantuan Kabupaten',
+    ];
+
+    $keuanganFields3 = [
+        'belanja_pemerintahan' => 'Belanja Pemerintahan',
+        'belanja_pembangunan' => 'Belanja Pembangunan',
+        'belanja_pembinaan' => 'Belanja Pembinaan',
+        'belanja_pemberdayaan' => 'Belanja Pemberdayaan',
+    ];
+
+    $keuanganFields4 = [
+        'sisa_anggaran' => 'Sisa Anggaran',
+    ];
+        $kelurahan = Kelurahan::find($kelurahan);
+        $laporanList = Laporan::where('idkelurahan', $kelurahan->idkelurahan)->get();
+       return view('home.detail_kelurahan', [
+    'laporanList' => $laporanList,
+    'pekerjaanFields' => $pekerjaanFields,
+    'pendidikanFields' => $pendidikanFields,
+    'kesehatanFields' => $kesehatanFields,
+    'lulusanFields' => $lulusanFields,
+    'lulusanFields2' => $lulusanFields2,
+    'lulusanFields3' => $lulusanFields3,
+    'keuanganFields1' => $keuanganFields1,
+    'keuanganFields2' => $keuanganFields2,
+    'keuanganFields3' => $keuanganFields3,
+    'keuanganFields4' => $keuanganFields4,
+    'kelurahan' => $kelurahan
+]);
+
+
+
     }
 }
 

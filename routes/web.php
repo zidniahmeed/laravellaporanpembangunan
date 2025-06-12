@@ -52,5 +52,6 @@ Route::resource('kelurahan', KelurahanController::class)->middleware(['authmiddl
 Route::get('api/kabupaten', [KelurahanController::class, 'getCities'])->name('api.kabupaten');
 Route::resource('laporan', LaporanController::class)->middleware(['authmiddleware']);
 Route::get('home/kelurahan', [KelurahanController::class,'kelurahan']);
+Route::get('detail-kelurahan/{id}', [KelurahanController::class,'detailkelurahan']);
 
 

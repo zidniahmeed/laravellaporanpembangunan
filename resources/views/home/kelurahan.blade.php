@@ -32,6 +32,15 @@
         .main-banner .item-3 {
             background-image: url(foto/bg.gif);
         }
+        .card:hover {
+    transform: translateY(-5px);
+    transition: 0.3s ease;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+.card-title {
+    font-weight: 600;
+}
+
     </style>
 </head>
 
@@ -79,47 +88,35 @@
 
     <div class="featured section">
         <div class="container">
-             <div class="row">
-        <div class="col-md-12 mb-4">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between bg-danger">
-                    <h6 class="m-0 font-weight-bold text-white">Data Kelurahan</h6>
-                </div>
+           <div class="row">
+    @foreach($kelurahan as $item)
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-lg border-0 rounded-4 overflow-hidden">
+                <img src="{{ asset( $item->fotokelurahan) }}"
+                     class="card-img-top" alt="Foto {{ $item->namakelurahan }}"
+                     style="height: 200px; object-fit: cover;">
                 <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped" id="table">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>Nama</th>
-                                        <th>Kecamatan</th>
-                                        <th>Kabupaten</th>
-                                        <th>Provinsi</th>
-                                        <th>No HP</th>
-                                        <th>Detail Kelurahan</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($kelurahan as $item)
-                                        <tr>
-                                            <td>{{ $item->namakelurahan }}</td>
-                                            <td>{{ $item->kecamatan }}</td>
-                                            <td>{{ $item->kabupaten }}</td>
-                                            <td>{{ $item->provinsi }}</td>
-                                            <td>{{ $item->nohpkelurahan }}</td>
-                                            {{-- <td>
-                                                <a href="{{ route('kelurahan.edit', $item->idkelurahan) }}"
-                                                    class="btn btn-sm btn-warning">Detail</a>
-                                            </td> --}}
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                    </div>
+                    <h5 class="card-title text-primary">{{ $item->namakelurahan }}</h5>
+                    <p class="card-text mb-1">
+                        📍 <strong>Kecamatan:</strong> {{ $item->kecamatan }}
+                    </p>
+                    <p class="card-text mb-1">
+                        🏙️ <strong>Kabupaten:</strong> {{ $item->kabupaten }}
+                    </p>
+                    <p class="card-text mb-1">
+                        🌍 <strong>Provinsi:</strong> {{ $item->provinsi }}
+                    </p>
+                    <p class="card-text">
+                        📞 <strong>No HP:</strong> {{ $item->nohpkelurahan }}
+                    </p>
+                    <a href="/detail-kelurahan/{{ $item->idkelurahan }}"
+                       class="btn btn-outline-warning btn-sm mt-2">Lihat Detail</a>
                 </div>
             </div>
         </div>
-    </div>
+    @endforeach
+</div>
+
         </div>
     </div>
 
